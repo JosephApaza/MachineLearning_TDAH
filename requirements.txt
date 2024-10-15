@@ -1,0 +1,6 @@
+opencv-python
+opencv-contrib-python
+psycopg2
+numpy
+pandas
+matplotlib

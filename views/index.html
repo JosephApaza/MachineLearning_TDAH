@@ -1,0 +1,71 @@
+<!-- Incluye el encabezado de la página desde el archivo '_header.html' en la carpeta 'partials' -->
+{% include 'partials/_header.html' %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="card">
+        <div class="card-body">
+          <h1 class="card-title mb-4 text-center">Inicio</h1>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="card text-white bg-success mb-3 text-center" style="max-width: 18rem; height: 200px;">
+                <div class="card-header">Captura de imágenes</div>
+                <div class="card-body text-center">
+                  <h5 class="card-title">Tomar fotos</h5>
+                  <a href="/captura_imagenes" class="btn btn-light">Ir a captura de imágenes</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card text-white bg-info mb-3 text-center" style="max-width: 18rem; height: 200px;">
+                <div class="card-header">Asignación de estudiantes</div>
+                <div class="card-body">
+                  <h5 class="card-title">Listado de estudiantes</h5>
+                  <a href="/asignacion_estudiantes" class="btn btn-light">Ir a asignación de estudiantes</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card text-white bg-secondary mb-3 text-center" style="max-width: 18rem; height: 200px;">
+                <div class="card-header">Procesamiento</div>
+                <div class="card-body">
+                  <h5 class="card-title">Comenzar  el procesamiento de expresiones</h5>
+                  <a href="/inventario" class="btn btn-light">Ir a procesamiento</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-secondary mb-3 text-center" style="max-width: 18rem; height: 200px;">
+                  <div class="card-header">Resultados</div>
+                  <div class="card-body">
+                    <h5 class="card-title">Visualizar resultados</h5>
+                    <a href="/inventario" class="btn btn-light">Ir a resultados</a>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Modal para mostrar mensaje -->
+<div class="modal fade" id="modalMensaje" tabindex="-1" aria-labelledby="modalMensajeLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalMensajeLabel">Mensaje</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                Por favor, selecciona una opción válida antes de consultar.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Incluye el pie de página desde el archivo '_footer.html' en la carpeta 'partials' -->
+{% include 'partials/_footer.html' %}

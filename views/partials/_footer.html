@@ -1,0 +1,25 @@
+<!-- Footer -->
+<style>
+    /* Estilo para el pie de página */
+    footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 40px;
+    }
+</style>
+
+<!-- Sección del pie de página con información de copyright y año actual -->
+<footer class="footer mt-auto py-3 bg-light text-center w-100">
+    <div class="bg-success w-100 m-0">
+        <span class="text-light w-100">TDAHDetection &copy; <span id="currentYear"></span></span>
+    </div>
+
+    <!-- Script para obtener el año actual -->
+    <script>
+        document.getElementById('currentYear').innerHTML = new Date().getFullYear();
+    </script>
+</footer>
+</body>
+
+</html>

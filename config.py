@@ -9,5 +9,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 from routes.indexRoute import *
-#from routes.pasosRoute import *
-#from routes.errorRoute import *
+from routes.captura_imagenesRoute import *
+from routes.asignacion_estudiantesRoute import *
+from routes.procesamiento_expresionesRoute import *
+from routes.resultadosRoute import *

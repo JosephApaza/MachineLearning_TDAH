@@ -1,0 +1,83 @@
+<!-- Incluye el encabezado de la página desde el archivo '_header.html' en la carpeta 'partials' -->
+{% include 'partials/_header.html' %}
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Botón de regresar -->
+        <div class="col-12 mb-3">
+            <a href="/" class="btn btn-secondary">&laquo; Volver</a>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Sección de la cámara -->
+        <div class="col-md-6">
+            <div class="border p-3">
+                <h4 class="text-center">Captura de Cámara</h4>
+                <!-- Aquí se mostrará el feed de la cámara usando OpenCV -->
+                <img src="static/images/placeholder.png" alt="Feed de la cámara" class="img-fluid" id="cameraFeed">
+            </div>
+        </div>
+
+        <!-- Formulario de información -->
+        <div class="col-md-6">
+            <div class="border p-3">
+                <h4 class="text-center">Información del Estudiante</h4>
+                <form id="studentForm">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" placeholder="Ingrese el nombre">
+                    </div>
+                    <div class="mb-3">
+                        <label for="edad" class="form-label">Edad</label>
+                        <input type="number" class="form-control" id="edad" placeholder="Ingrese la edad">
+                    </div>
+                    <div class="mb-3">
+                        <label for="genero" class="form-label">Género</label>
+                        <select class="form-select" id="genero">
+                            <option value="" selected disabled>--Seleccione--</option>
+                            <option value="masculino">Masculino</option>
+                            <option value="femenino">Femenino</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="expresion" class="form-label">Expresión</label>
+                        <select class="form-select" id="expresion">
+                            <option value="" selected disabled>--Seleccione--</option>
+                            <option value="neutral">Neutral</option>
+                            <option value="sonrisa">Sonrisa</option>
+                            <option value="fruncir_ceño">Fruncir el ceño</option>
+                            <option value="sorpresa">Sorpresa</option>
+                            <option value="tristeza">Tristeza</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="numeroFotos" class="form-label">Número de fotos</label>
+                        <input type="number" class="form-control" id="numeroFotos"
+                            placeholder="Ingrese el número de fotos">
+                    </div>
+                    <div class="mb-3">
+                        <label for="temporizador" class="form-label">Temporizador (segundos)</label>
+                        <input type="number" class="form-control" id="temporizador"
+                            placeholder="Ingrese el tiempo del temporizador">
+                    </div>
+                    <button type="button" class="btn btn-primary w-100" id="tomarFotosBtn">Tomar fotos</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'partials/_footer.html' %}
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Aquí puedes integrar la funcionalidad de OpenCV para el feed de la cámara -->
+<script>
+    document.getElementById('tomarFotosBtn').addEventListener('click', function () {
+        // Aquí iría la lógica para tomar fotos con OpenCV y el temporizador
+        console.log("Toma de fotos activada.");
+    });
+</script>
+<!-- Incluye el pie de página desde el archivo '_footer.html' en la carpeta 'partials' -->

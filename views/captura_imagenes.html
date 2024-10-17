@@ -13,8 +13,8 @@
         <div class="col-md-6">
             <div class="border p-3">
                 <h4 class="text-center">Captura de Cámara</h4>
-                <!-- Aquí se mostrará el feed de la cámara usando OpenCV -->
-                <img src="static/images/placeholder.png" alt="Feed de la cámara" class="img-fluid" id="cameraFeed">
+                <video id="cameraFeed" autoplay playsinline class="img-fluid"></video>
+                <canvas id="canvas" style="display: none;"></canvas>
             </div>
         </div>
 
@@ -25,15 +25,15 @@
                 <form id="studentForm">
                     <div class="mb-3">
                         <label for="nombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nombre" placeholder="Ingrese el nombre">
+                        <input type="text" class="form-control" id="nombre" placeholder="Ingrese el nombre" required>
                     </div>
                     <div class="mb-3">
                         <label for="edad" class="form-label">Edad</label>
-                        <input type="number" class="form-control" id="edad" placeholder="Ingrese la edad">
+                        <input type="number" class="form-control" id="edad" placeholder="Ingrese la edad" required>
                     </div>
                     <div class="mb-3">
                         <label for="genero" class="form-label">Género</label>
-                        <select class="form-select" id="genero">
+                        <select class="form-select" id="genero" required>
                             <option value="" selected disabled>--Seleccione--</option>
                             <option value="masculino">Masculino</option>
                             <option value="femenino">Femenino</option>
@@ -41,8 +41,15 @@
                         </select>
                     </div>
                     <div class="mb-3">
+                        <label for="tdah" class="form-label">¿Tiene TDAH?</label>
+                        <select class="form-select" id="tdah" required>
+                            <option value="false">No</option>
+                            <option value="true">Sí</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
                         <label for="expresion" class="form-label">Expresión</label>
-                        <select class="form-select" id="expresion">
+                        <select class="form-select" id="expresion" required>
                             <option value="" selected disabled>--Seleccione--</option>
                             <option value="neutral">Neutral</option>
                             <option value="sonrisa">Sonrisa</option>
@@ -50,16 +57,6 @@
                             <option value="sorpresa">Sorpresa</option>
                             <option value="tristeza">Tristeza</option>
                         </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="numeroFotos" class="form-label">Número de fotos</label>
-                        <input type="number" class="form-control" id="numeroFotos"
-                            placeholder="Ingrese el número de fotos">
-                    </div>
-                    <div class="mb-3">
-                        <label for="temporizador" class="form-label">Temporizador (segundos)</label>
-                        <input type="number" class="form-control" id="temporizador"
-                            placeholder="Ingrese el tiempo del temporizador">
                     </div>
                     <button type="button" class="btn btn-primary w-100" id="tomarFotosBtn">Tomar fotos</button>
                 </form>
@@ -70,14 +67,83 @@
 
 {% include 'partials/_footer.html' %}
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Aquí puedes integrar la funcionalidad de OpenCV para el feed de la cámara -->
 <script>
-    document.getElementById('tomarFotosBtn').addEventListener('click', function () {
-        // Aquí iría la lógica para tomar fotos con OpenCV y el temporizador
-        console.log("Toma de fotos activada.");
-    });
+    const video = document.getElementById('cameraFeed');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    let stream;
+
+    // Iniciar la cámara al cargar la página
+    async function startCamera() {
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            video.srcObject = stream;
+        } catch (error) {
+            console.error("Error al acceder a la cámara: ", error);
+        }
+    }
+
+    // Capturar múltiples imágenes
+    async function captureImages() {
+        const numImages = 3;  // Cantidad de imágenes a capturar
+        const interval = 1000; // Intervalo en milisegundos entre capturas
+
+        const nombre = document.getElementById('nombre').value;
+        const edad = document.getElementById('edad').value;
+        const genero = document.getElementById('genero').value;
+        const tdah = document.getElementById('tdah').value === 'true';
+        const expresion = document.getElementById('expresion').value;
+
+        if (!nombre || !edad || !genero || !expresion) {
+            alert('Por favor, complete todos los campos.');
+            return;
+        }
+
+        for (let i = 0; i < numImages; i++) {
+            // Capturar la imagen del video
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Convertir la imagen del canvas a base64
+            const imageData = canvas.toDataURL('image/jpeg');
+
+            // Datos del formulario
+            const formData = {
+                nombre: nombre,
+                edad: edad,
+                genero: genero,
+                tdah: tdah,
+                expresion: expresion,
+                imagen: imageData  // Imagen en base64
+            };
+
+            // Enviar la imagen al backend
+            const response = await fetch('/api/capture_images', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                console.log(`Imagen ${i + 1} capturada y enviada correctamente.`);
+            } else {
+                console.log(`Error en la captura de la imagen ${i + 1}.`);
+            }
+
+            // Pausar antes de capturar la siguiente imagen
+            await new Promise(resolve => setTimeout(resolve, interval));
+        }
+
+        alert('Captura de imágenes completada.');
+    }
+
+    // Iniciar la cámara al cargar la página
+    window.onload = startCamera;
+
+    // Evento para tomar múltiples fotos al hacer clic en el botón
+    document.getElementById('tomarFotosBtn').addEventListener('click', captureImages);
 </script>
-<!-- Incluye el pie de página desde el archivo '_footer.html' en la carpeta 'partials' -->

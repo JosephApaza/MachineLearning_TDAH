@@ -22,31 +22,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Ejemplo de filas -->
+                    {% for estudiante in estudiantes %}
                     <tr>
-                        <td>Giacomo Guilizzoni</td>
-                        <td>12</td>
-                        <td>Masculino</td>
-                        <td><input type="checkbox" checked disabled></td>
+                        <td>{{ estudiante.nombre }}</td>
+                        <td>{{ estudiante.edad }}</td>
+                        <td>{{ estudiante.genero }}</td>
+                        <td>
+                            {% if estudiante.tiene_tdah %}
+                            <span class="text-success">&#10003;</span> <!-- Check (✓) -->
+                            {% else %}
+                            <span class="text-danger">&#10007;</span> <!-- Cross (✗) -->
+                            {% endif %}
+                        </td>
                     </tr>
+                    {% else %}
                     <tr>
-                        <td>Marco Botton</td>
-                        <td>14</td>
-                        <td>Masculino</td>
-                        <td><input type="checkbox" disabled></td>
+                        <td colspan="5" class="text-center">No hay estudiantes registrados.</td>
                     </tr>
-                    <tr>
-                        <td>Mariah Maclachlan</td>
-                        <td>16</td>
-                        <td>Femenino</td>
-                        <td><input type="checkbox" checked disabled></td>
-                    </tr>
-                    <tr>
-                        <td>Valerie Liberty</td>
-                        <td>15</td>
-                        <td>Femenino</td>
-                        <td><input type="checkbox" checked disabled></td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

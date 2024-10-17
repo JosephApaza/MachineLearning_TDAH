@@ -1,0 +1,67 @@
+<!-- Incluye el encabezado de la página desde el archivo '_header.html' en la carpeta 'partials' -->
+{% include 'partials/_header.html' %}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12 mb-3">
+            <a href="/asignacion_estudiantes" class="btn btn-secondary">&laquo; Volver</a>
+        </div>
+    </div>
+    <h3 class="text-center">Editar Estudiante</h3>
+
+    <!-- Contenedor para el mensaje de confirmación -->
+    <div id="confirmation-message" class="alert alert-success d-none" role="alert">
+        Cambios guardados exitosamente.
+    </div>
+
+    <form method="POST" action="" id="edit-form">
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" value="{{ estudiante.nombre }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="edad" class="form-label">Edad</label>
+            <input type="number" class="form-control" id="edad" name="edad" value="{{ estudiante.edad }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="genero" class="form-label">Género</label>
+            <select class="form-select" id="genero" name="genero" required>
+                <option value="Masculino" {% if estudiante.genero == 'Masculino' %} selected {% endif %}>Masculino</option>
+                <option value="Femenino" {% if estudiante.genero == 'Femenino' %} selected {% endif %}>Femenino</option>
+            </select>
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="tiene_tdah" name="tiene_tdah" {% if estudiante.tiene_tdah %} checked {% endif %}>
+            <label class="form-check-label" for="tiene_tdah">Tiene TDAH</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    </form>
+</div>
+
+<!-- Incluye el pie de página desde el archivo '_footer.html' en la carpeta 'partials' -->
+{% include 'partials/_footer.html' %}
+<script>
+    // Muestra el mensaje de confirmación al enviar el formulario usando fetch
+    document.getElementById('edit-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Evita la recarga de la página
+        
+        // Crear un objeto FormData con los datos del formulario
+        let formData = new FormData(this);
+        
+        // Enviar la solicitud con fetch al backend
+        fetch("", {
+            method: "POST",
+            body: formData
+        }).then(response => {
+            if (response.ok) {
+                // Si la respuesta es exitosa, mostrar el mensaje de confirmación
+                document.getElementById('confirmation-message').classList.remove('d-none');
+            } else {
+                alert("Ocurrió un error al guardar los cambios.");
+            }
+        }).catch(error => {
+            console.error("Error en la solicitud:", error);
+            alert("Error en la solicitud. Revisa la consola para más detalles.");
+        });
+    });
+</script>

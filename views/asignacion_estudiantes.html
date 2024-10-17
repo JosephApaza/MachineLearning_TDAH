@@ -15,7 +15,6 @@
             <table class="table table-striped table-hover">
                 <thead class="table-dark">
                     <tr>
-                        <th>ID</th>
                         <th>Nombre</th>
                         <th>Edad</th>
                         <th>Género</th>
@@ -23,35 +22,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Fila de ejemplo -->
+                    <!-- Cargar dinámicamente los estudiantes desde el backend -->
+                    {% for estudiante in estudiantes %}
                     <tr>
-                        <td>1</td>
-                        <td>Giacomo Guilizzoni</td>
-                        <td>12</td>
-                        <td>Masculino</td>
-                        <td><a href="#" class="btn btn-sm btn-outline-secondary bi bi-pencil-square"></a></td>
+                        <td>{{ estudiante.nombre }}</td>
+                        <td>{{ estudiante.edad }}</td>
+                        <td>{{ estudiante.genero }}</td>
+                        <td>
+                            <a href="/editar_estudiante/{{estudiante.id_estudiante}}" 
+                               class="btn btn-sm btn-outline-secondary bi bi-pencil-square">
+                            </a>
+                        </td>
                     </tr>
+                    {% else %}
+                    <!-- Mostrar un mensaje si no hay estudiantes -->
                     <tr>
-                        <td>2</td>
-                        <td>Marco Botton</td>
-                        <td>14</td>
-                        <td>Masculino</td>
-                        <td><a href="#" class="btn btn-sm btn-outline-secondary bi bi-pencil-square"></a></td>
+                        <td colspan="5" class="text-center">No hay estudiantes registrados.</td>
                     </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Mariah Maclachlan</td>
-                        <td>16</td>
-                        <td>Femenino</td>
-                        <td><a href="#" class="btn btn-sm btn-outline-secondary bi bi-pencil-square"></a></td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Valerie Liberty</td>
-                        <td>15</td>
-                        <td>Femenino</td>
-                        <td><a href="#" class="btn btn-sm btn-outline-secondary bi bi-pencil-square"></a></td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

@@ -1,9 +1,12 @@
-from config import app
+from config import app, db
 from flask import render_template
+from sqlalchemy import text
 
 # Ruta para la página de inicio
-@app.route("/asignacion_estudiantes")
+@app.route("/asignacion_estudiantes", methods=['POST'])
 def asignacion_estudiantes():
-    
-    # Renderizamos la plantilla y pasamos los datos a la misma
-    return render_template("asignacion_estudiantes.html")
+    # Ejecutar el procedimiento almacenado directamente
+    estudiantes = db.session.execute(text("SELECT * FROM listar_estudiantes()")).fetchall()
+
+    # Renderizar la plantilla con la lista de estudiantes
+    return render_template('asignacion_estudiantes.html', estudiantes=estudiantes)

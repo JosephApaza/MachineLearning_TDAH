@@ -56,3 +56,29 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION obtener_datos_estudiantes()
+RETURNS TABLE (
+    nombre_estudiante VARCHAR(100),
+    edad_estudiante INTEGER,
+    genero_estudiante VARCHAR(10),
+    nombre_expresion VARCHAR(50),
+    numero_imagenes INTEGER
+) 
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        e.nombre AS nombre_estudiante,
+        e.edad AS edad_estudiante,
+        e.genero AS genero_estudiante,
+        ex.nombre AS nombre_expresion,
+        rf.cant_imagen AS numero_imagenes  -- Obtener directamente el valor de cant_imagen
+    FROM 
+        estudiantes e
+    JOIN 
+        resultados_facial rf ON e.id_estudiante = rf.id_estudiante
+    JOIN 
+        expresiones ex ON rf.id_expresion = ex.id_expresion;
+END;
+$$;

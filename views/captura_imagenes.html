@@ -51,11 +51,9 @@
                         <label for="expresion" class="form-label">Expresión</label>
                         <select class="form-select" id="expresion" required>
                             <option value="" selected disabled>--Seleccione--</option>
-                            <option value="neutral">Neutral</option>
-                            <option value="sonrisa">Sonrisa</option>
-                            <option value="fruncir_ceño">Fruncir el ceño</option>
-                            <option value="sorpresa">Sorpresa</option>
-                            <option value="tristeza">Tristeza</option>
+                            {% for expresion in expresiones %}
+                            <option value="{{ expresion[1] }}">{{ expresion[1] }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <button type="button" class="btn btn-primary w-100" id="tomarFotosBtn">Tomar fotos</button>

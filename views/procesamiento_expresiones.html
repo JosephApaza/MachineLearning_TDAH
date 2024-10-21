@@ -32,8 +32,8 @@
     <div class="row">
         <div class="col-md-12">
             <h3 class="text-center mb-4">Resumen de Datos Recolectados</h3>
-            <table class="table table-bordered">
-                <thead class="table-light">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
                     <tr>
                         <th>Nombre del Estudiante</th>
                         <th>Edad</th>
@@ -43,14 +43,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Datos dinámicos del estudiante -->
+                    <!-- Aquí se cargarán los datos dinámicos obtenidos desde el controller -->
+                    {% for estudiante in estudiantes_datos %}
                     <tr>
-                        <td>estudiante.nombre</td>
-                        <td>estudiante.edad</td>
-                        <td>estudiante.genero</td>
-                        <td>expresion</td>
-                        <td>numero_imagenes</td>
+                        <td>{{ estudiante[0] }}</td> <!-- Nombre del estudiante -->
+                        <td>{{ estudiante[1] }}</td> <!-- Edad del estudiante -->
+                        <td>{{ estudiante[2] }}</td> <!-- Género del estudiante -->
+                        <td>{{ estudiante[3] }}</td> <!-- Expresión capturada -->
+                        <td>{{ estudiante[4] }}</td> <!-- Número de imágenes -->
                     </tr>
+                    {% else %}
+                    <!-- Mostrar un mensaje si no hay estudiantes -->
+                    <tr>
+                        <td colspan="5" class="text-center">No hay estudiantes registrados.</td>
+                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
 
@@ -64,25 +71,38 @@
 
 <!-- Pantalla de carga -->
 <div id="loading" class="d-flex visually-hidden">
-    <div class="spinner-border text-primary" role="status">
-    </div>
+    <div class="spinner-border text-primary" role="status"></div>
     <span> Cargando... </span>
 </div>
 
-<!-- Incluir footer -->
 {% include 'partials/_footer.html' %}
 
-<!-- Script para manejar la pantalla de carga -->
+<!-- Script para manejar la pantalla de carga y el procesamiento -->
 <script>
     document.getElementById('procesarBtn').addEventListener('click', function () {
-        // Remover la clase 'visually-hidden' para mostrar la pantalla de carga
+        // Mostrar la pantalla de carga
         document.getElementById('loading').classList.remove('visually-hidden');
 
-        // Aquí puedes llamar a la función que inicia el procesamiento de las imágenes (por ejemplo, una llamada AJAX)
-        setTimeout(function () {
-            // Simulación de procesamiento (después de 3 segundos, volver a ocultar la pantalla de carga)
+        // Llamar al backend para iniciar el procesamiento
+        fetch('/api/procesar_expresiones', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(result => {
             document.getElementById('loading').classList.add('visually-hidden');
-            alert('Procesamiento completo');
-        }, 3000); // Simulación de un proceso de 3 segundos
+            if (result.success) {
+                alert('Procesamiento completado.');
+            } else {
+                alert('Error en el procesamiento: ' + result.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error al procesar:', error);
+            alert('Hubo un error durante el procesamiento.');
+            document.getElementById('loading').classList.add('visually-hidden');
+        });
     });
 </script>

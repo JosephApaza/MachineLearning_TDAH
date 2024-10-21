@@ -15,7 +15,30 @@ def safe_str(input_str):
 # Ruta para la página de captura de imágenes
 @app.route("/captura_imagenes")
 def captura_imagenes():
-    return render_template("captura_imagenes.html")
+    try:
+        # Conectar a la base de datos
+        conn = psycopg2.connect(
+            dbname="Test1",
+            user="postgres",
+            password="123",
+            host="localhost",
+            options='-c client_encoding=UTF8'
+        )
+        cur = conn.cursor()
+
+        # Obtener las expresiones disponibles desde la base de datos
+        cur.execute("SELECT id_expresion, nombre FROM expresiones")
+        expresiones = cur.fetchall()
+
+        # Cerrar la conexión
+        cur.close()
+        conn.close()
+
+        # Renderizar la plantilla HTML y pasar las expresiones
+        return render_template("captura_imagenes.html", expresiones=expresiones)
+    except Exception as e:
+        print(f"Error al obtener las expresiones: {e}")
+        return render_template("captura_imagenes.html", expresiones=[])
 
 # Ruta para manejar la solicitud de captura de imágenes
 @app.route('/api/capture_images', methods=['POST'])
@@ -69,6 +92,31 @@ def handle_capture_images():
 
         id_expresion = expresion_row[0]
 
+        # Verificar si ya existe un registro en resultados_facial para este estudiante y expresión
+        cur.execute(
+            "SELECT id_resultados, cant_imagen FROM resultados_facial WHERE id_estudiante = %s AND id_expresion = %s", 
+            (id_estudiante, id_expresion)
+        )
+        resultado_facial = cur.fetchone()
+
+        if resultado_facial:
+            # Si ya existe un registro, actualizar el campo cant_imagen
+            id_resultados, cant_imagen_actual = resultado_facial
+            cant_imagen_nueva = cant_imagen_actual + 1
+            cur.execute(
+                "UPDATE resultados_facial SET cant_imagen = %s, frame = %s WHERE id_resultados = %s",
+                (cant_imagen_nueva, cant_imagen_nueva, id_resultados)
+            )
+        else:
+            # Si no existe un registro, crear uno nuevo
+            cur.execute(
+                """
+                INSERT INTO resultados_facial (id_estudiante, id_expresion, cant_imagen, frame, success)
+                VALUES (%s, %s, %s, %s, %s)
+                """, 
+                (id_estudiante, id_expresion, 1, 1, True)
+            )
+
         # Decodificar la imagen en base64
         image_data = data.get('imagen')
         image = Image.open(BytesIO(base64.b64decode(image_data.split(',')[1])))
@@ -82,16 +130,7 @@ def handle_capture_images():
         img_count = len(os.listdir(output_dir)) + 1
         image.save(f"{output_dir}/{expresion}_captura_{img_count}.jpg")
 
-        # Insertar datos en la tabla de resultados_facial
-        cur.execute(
-            """
-            INSERT INTO resultados_facial (id_estudiante, id_expresion, cant_imagen, frame, success) 
-            VALUES (%s, %s, %s, %s, %s)
-            """, 
-            (id_estudiante, id_expresion, f'{img_count} imagen capturada', img_count, True)
-        )
         conn.commit()
-
         cur.close()
         conn.close()
 

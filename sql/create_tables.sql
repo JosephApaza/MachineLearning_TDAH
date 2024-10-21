@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS public.resultados_facial
     id_resultados serial NOT NULL,
     id_estudiante integer,
     id_expresion integer,
-    cant_imagen character varying(255) COLLATE pg_catalog."default",
+    cant_imagen integer,  -- Cambiamos de character varying a integer
     frame integer,
     fecha timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     "timestamp" double precision,

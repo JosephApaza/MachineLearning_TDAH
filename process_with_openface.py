@@ -43,12 +43,12 @@ def process_student_images(student_id, tdah, input_dir='data/raw', output_dir='d
         with open(csv_path, mode='w', newline='') as csv_file:
             writer = csv.writer(csv_file)
             # Escribir encabezado del CSV
-            writer.writerow(['Image', 'TDAH', 'Expresion', 'AU01_r', 'AU02_r', 'AU04_r', 'AU05_r', 'AU06_r', 'AU07_r', 
-                             'AU09_r', 'AU10_r', 'AU12_r', 'AU14_r', 'AU15_r', 'AU17_r', 'AU20_r', 
-                             'AU23_r', 'AU25_r', 'AU26_r', 'AU45_r', 'AU01_c', 'AU02_c', 'AU04_c', 
-                             'AU05_c', 'AU06_c', 'AU07_c', 'AU09_c', 'AU10_c', 'AU12_c', 'AU14_c', 
-                             'AU15_c', 'AU17_c', 'AU20_c', 'AU23_c', 'AU25_c', 'AU26_c', 'AU28_c', 
-                             'AU45_c'])  # Añadir "Expresion" al encabezado
+            writer.writerow(['Image', 'TDAH', 'Expresion','timestamp','confidence','success', 
+                             'AU01_r', 'AU02_r', 'AU04_r', 'AU05_r', 'AU06_r', 'AU07_r', 'AU09_r', 
+                             'AU10_r', 'AU12_r', 'AU14_r', 'AU15_r', 'AU17_r', 'AU20_r', 'AU23_r', 
+                             'AU25_r', 'AU26_r', 'AU45_r', 'AU01_c', 'AU02_c', 'AU04_c', 'AU05_c', 
+                             'AU06_c', 'AU07_c', 'AU09_c', 'AU10_c', 'AU12_c', 'AU14_c', 'AU15_c', 
+                             'AU17_c', 'AU20_c', 'AU23_c', 'AU25_c', 'AU26_c', 'AU28_c', 'AU45_c'])
 
             # Procesar cada imagen en el directorio de la expresión
             for image_name in os.listdir(expression_dir):

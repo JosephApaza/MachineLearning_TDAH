@@ -43,12 +43,12 @@ def process_student_images(student_id, tdah, input_dir='data/raw', output_dir='d
         with open(csv_path, mode='w', newline='') as csv_file:
             writer = csv.writer(csv_file)
             # Escribir encabezado del CSV
-            writer.writerow(['Image', 'TDAH', 'AU01_r', 'AU02_r', 'AU04_r', 'AU05_r', 'AU06_r', 'AU07_r', 
+            writer.writerow(['Image', 'TDAH', 'Expresion', 'AU01_r', 'AU02_r', 'AU04_r', 'AU05_r', 'AU06_r', 'AU07_r', 
                              'AU09_r', 'AU10_r', 'AU12_r', 'AU14_r', 'AU15_r', 'AU17_r', 'AU20_r', 
                              'AU23_r', 'AU25_r', 'AU26_r', 'AU45_r', 'AU01_c', 'AU02_c', 'AU04_c', 
                              'AU05_c', 'AU06_c', 'AU07_c', 'AU09_c', 'AU10_c', 'AU12_c', 'AU14_c', 
                              'AU15_c', 'AU17_c', 'AU20_c', 'AU23_c', 'AU25_c', 'AU26_c', 'AU28_c', 
-                             'AU45_c'])
+                             'AU45_c'])  # Añadir "Expresion" al encabezado
 
             # Procesar cada imagen en el directorio de la expresión
             for image_name in os.listdir(expression_dir):
@@ -64,16 +64,10 @@ def process_student_images(student_id, tdah, input_dir='data/raw', output_dir='d
                     reader = csv.reader(temp_file)
                     next(reader)  # Saltar encabezado
                     for row in reader:
-                        # Agregar el nombre de la imagen y si tiene TDAH al inicio de la fila
-                        writer.writerow([image_name, tdah] + row[2:])  # Agregar datos a partir de AU01_r
+                        # Agregar el nombre de la imagen, si tiene TDAH, y la expresión al inicio de la fila
+                        writer.writerow([image_name, tdah, expression] + row[2:])  # Agregar expresión
 
                 # Eliminar archivo temporal después de usarlo
                 os.remove(temp_csv)
 
         print(f"Resultados guardados en {csv_path}")
-
-# Ejemplo de uso
-if __name__ == '__main__':
-    student_id = input("Introduce el ID del estudiante para procesar: ")
-    tdah = input("¿El estudiante tiene TDAH? (True/False): ")
-    process_student_images(student_id, tdah)

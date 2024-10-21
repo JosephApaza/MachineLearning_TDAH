@@ -31,7 +31,6 @@ CREATE TABLE IF NOT EXISTS public.resultados_facial
     cant_imagen integer,  -- Cambiamos de character varying a integer
     frame integer,
     fecha timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    "timestamp" double precision,
     confidence double precision,
     success boolean,
     au01_r double precision,

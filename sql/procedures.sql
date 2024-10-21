@@ -61,14 +61,13 @@ RETURNS TABLE (
     nombre_estudiante VARCHAR(100),
     edad_estudiante INTEGER,
     genero_estudiante VARCHAR(10),
-    nombre_expresion VARCHAR(50),
-    numero_imagenes INTEGER
+    nombre_expresion VARCHAR(50)
 ) 
 LANGUAGE plpgsql
 AS $$
 BEGIN
     RETURN QUERY
-    SELECT 
+    SELECT DISTINCT
         e.nombre AS nombre_estudiante,
         e.edad AS edad_estudiante,
         e.genero AS genero_estudiante,

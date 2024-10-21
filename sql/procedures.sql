@@ -73,7 +73,6 @@ BEGIN
         e.edad AS edad_estudiante,
         e.genero AS genero_estudiante,
         ex.nombre AS nombre_expresion,
-        rf.cant_imagen AS numero_imagenes  -- Obtener directamente el valor de cant_imagen
     FROM 
         estudiantes e
     JOIN 

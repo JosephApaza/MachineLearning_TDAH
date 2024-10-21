@@ -1,8 +1,8 @@
 from config import app
 from flask import render_template, jsonify
 import psycopg2
+import os
 from process_with_openface import process_student_images  # Importar el script para procesar con OpenFace
-
 
 # Ruta para la página de procesamiento de expresiones
 @app.route("/procesamiento_expresiones")
@@ -57,6 +57,22 @@ def handle_procesar_expresiones():
 
             # Convertir el valor booleano de TDAH a una cadena "True" o "False" para el procesamiento
             tdah = "True" if tiene_tdah else "False"
+
+            # Definir directorio donde se guardan los resultados
+            output_dir = f"data/results/{id_estudiante}"
+
+            # Comprobar si ya se procesaron todas las expresiones
+            todas_expresiones_procesadas = True
+            for expression in os.listdir(f"data/raw/{id_estudiante}"):
+                csv_path = os.path.join(output_dir, expression, f'{expression}_results.csv')
+                if not os.path.exists(csv_path):
+                    todas_expresiones_procesadas = False
+                    break
+
+            # Si todas las expresiones ya están procesadas, saltar
+            if todas_expresiones_procesadas:
+                print(f"Estudiante {nombre} ({id_estudiante}) ya tiene todas las expresiones procesadas. Saltando.")
+                continue
 
             # Procesar las imágenes del estudiante con el script de OpenFace
             process_student_images(str(id_estudiante), tdah)

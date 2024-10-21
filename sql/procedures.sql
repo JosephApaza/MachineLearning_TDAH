@@ -72,7 +72,7 @@ BEGIN
         e.nombre AS nombre_estudiante,
         e.edad AS edad_estudiante,
         e.genero AS genero_estudiante,
-        ex.nombre AS nombre_expresion,
+        ex.nombre AS nombre_expresion
     FROM 
         estudiantes e
     JOIN 

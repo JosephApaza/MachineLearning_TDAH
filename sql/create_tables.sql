@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS public.resultados_facial
     id_resultados serial NOT NULL,
     id_estudiante integer,
     id_expresion integer,
+    nombre_imagen character varying(50),
     cant_imagen integer,  -- Cambiamos de character varying a integer
     fecha timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     confidence double precision,

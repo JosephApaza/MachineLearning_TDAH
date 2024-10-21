@@ -92,31 +92,6 @@ def handle_capture_images():
 
         id_expresion = expresion_row[0]
 
-        # Verificar si ya existe un registro en resultados_facial para este estudiante y expresión
-        cur.execute(
-            "SELECT id_resultados, cant_imagen FROM resultados_facial WHERE id_estudiante = %s AND id_expresion = %s", 
-            (id_estudiante, id_expresion)
-        )
-        resultado_facial = cur.fetchone()
-
-        if resultado_facial:
-            # Si ya existe un registro, actualizar el campo cant_imagen
-            id_resultados, cant_imagen_actual = resultado_facial
-            cant_imagen_nueva = cant_imagen_actual + 1
-            cur.execute(
-                "UPDATE resultados_facial SET cant_imagen = %s, frame = %s WHERE id_resultados = %s",
-                (cant_imagen_nueva, cant_imagen_nueva, id_resultados)
-            )
-        else:
-            # Si no existe un registro, crear uno nuevo
-            cur.execute(
-                """
-                INSERT INTO resultados_facial (id_estudiante, id_expresion, cant_imagen, frame, success)
-                VALUES (%s, %s, %s, %s, %s)
-                """, 
-                (id_estudiante, id_expresion, 1, 1, True)
-            )
-
         # Decodificar la imagen en base64
         image_data = data.get('imagen')
         image = Image.open(BytesIO(base64.b64decode(image_data.split(',')[1])))
@@ -126,9 +101,19 @@ def handle_capture_images():
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
-        # Guardar la imagen
+        # Guardar la imagen con el formato: {id_estudiante}_{expresion}_captura_{img_count}.jpg
         img_count = len(os.listdir(output_dir)) + 1
-        image.save(f"{output_dir}/{expresion}_captura_{img_count}.jpg")
+        image_name = f"{id_estudiante}_{expresion}_captura_{img_count}.jpg"
+        image.save(f"{output_dir}/{image_name}")
+
+        # Registrar la captura de la imagen en la base de datos
+        cur.execute(
+            """
+            INSERT INTO resultados_facial (id_estudiante, id_expresion, nombre_imagen, success)
+            VALUES (%s, %s, %s, %s)
+            """, 
+            (id_estudiante, id_expresion, image_name, True)
+        )
 
         conn.commit()
         cur.close()

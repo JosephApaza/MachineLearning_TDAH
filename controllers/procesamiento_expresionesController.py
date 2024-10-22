@@ -91,9 +91,6 @@ def handle_procesar_expresiones():
                             au_values = {key: row.get(key, 0) for key in row if key.startswith('AU')}  # AUs en mayúsculas
                             nombre_imagen = row.get('Image', 'desconocida')  # Usar 'desconocida' si no está disponible
 
-                            # Comprobar si se están obteniendo valores diferentes para cada captura
-                            print(f"Procesando {nombre_imagen}: Confidence: {confidence}, AU01_r: {au_values.get('AU01_r', 0)}")
-
                             # Actualizar solo los resultados relacionados con AUs y confidence, filtrando por el nombre de la imagen
                             cur.execute("""
                                 UPDATE resultados_facial 
@@ -127,10 +124,27 @@ def handle_procesar_expresiones():
                             )
 
         conn.commit()
+
+        # Extraer datos para SVM y generar CSV
+        cur.execute("SELECT * FROM obtener_datos_para_svm()")
+        datos_svm = cur.fetchall()
+
+        # Generar CSV y guardarlo en el directorio "results"
+        output_dir_csv = "data/results"
+        if not os.path.exists(output_dir_csv):
+            os.makedirs(output_dir_csv)
+
+        csv_path = os.path.join(output_dir_csv, "svm_data.csv")
+
+        with open(csv_path, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([desc[0] for desc in cur.description])  # Escribir encabezados de columnas
+            writer.writerows(datos_svm)
+
         cur.close()
         conn.close()
 
-        return jsonify({'success': True, 'message': 'Procesamiento de expresiones completado.'})
+        return jsonify({'success': True, 'message': 'Procesamiento de expresiones completado y CSV generado.'})
 
     except Exception as e:
         print(f"Error durante el procesamiento de expresiones: {e}")

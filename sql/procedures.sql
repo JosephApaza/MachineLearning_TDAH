@@ -90,6 +90,7 @@ RETURNS TABLE (
     nombre_imagen VARCHAR(50),
     fecha TIMESTAMP,
     confidence DOUBLE PRECISION,
+    expresion VARCHAR(50),
     au01_r DOUBLE PRECISION,
     au02_r DOUBLE PRECISION,
     au04_r DOUBLE PRECISION,
@@ -138,6 +139,7 @@ BEGIN
         rf.nombre_imagen,
         rf.fecha,
         rf.confidence,
+        ex.nombre AS expresion,
         rf.au01_r, rf.au02_r, rf.au04_r, rf.au05_r, rf.au06_r, rf.au07_r,
         rf.au09_r, rf.au10_r, rf.au12_r, rf.au14_r, rf.au15_r, rf.au17_r,
         rf.au20_r, rf.au23_r, rf.au25_r, rf.au26_r, rf.au45_r,
@@ -148,6 +150,8 @@ BEGIN
         estudiantes e
     JOIN 
         resultados_facial rf ON e.id_estudiante = rf.id_estudiante
+    JOIN 
+        expresiones ex ON rf.id_expresion = ex.id_expresion
     ORDER BY 
         e.nombre, rf.fecha;
 END;

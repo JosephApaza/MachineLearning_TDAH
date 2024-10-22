@@ -91,10 +91,13 @@ def handle_procesar_expresiones():
                             au_values = {key: row.get(key, 0) for key in row if key.startswith('AU')}  # AUs en mayúsculas
                             nombre_imagen = row.get('Image', 'desconocida')  # Usar 'desconocida' si no está disponible
 
-                            # Actualizar los resultados en la base de datos
+                            # Comprobar si se están obteniendo valores diferentes para cada captura
+                            print(f"Procesando {nombre_imagen}: Confidence: {confidence}, AU01_r: {au_values.get('AU01_r', 0)}")
+
+                            # Actualizar solo los resultados relacionados con AUs y confidence, filtrando por el nombre de la imagen
                             cur.execute("""
                                 UPDATE resultados_facial 
-                                SET nombre_imagen = %s, confidence = %s, 
+                                SET confidence = %s, 
                                     au01_r = %s, au02_r = %s, au04_r = %s, au05_r = %s, 
                                     au06_r = %s, au07_r = %s, au09_r = %s, au10_r = %s, 
                                     au12_r = %s, au14_r = %s, au15_r = %s, au17_r = %s, 
@@ -105,10 +108,9 @@ def handle_procesar_expresiones():
                                     au12_c = %s, au14_c = %s, au15_c = %s, au17_c = %s, 
                                     au20_c = %s, au23_c = %s, au25_c = %s, au26_c = %s, 
                                     au28_c = %s, au45_c = %s
-                                WHERE id_estudiante = %s AND id_expresion = (SELECT id_expresion FROM expresiones WHERE nombre = %s)
+                                WHERE id_estudiante = %s AND nombre_imagen = %s
                                 """, 
                                 (
-                                    nombre_imagen, 
                                     confidence,
                                     au_values.get('AU01_r', 0), au_values.get('AU02_r', 0), au_values.get('AU04_r', 0), au_values.get('AU05_r', 0),
                                     au_values.get('AU06_r', 0), au_values.get('AU07_r', 0), au_values.get('AU09_r', 0), au_values.get('AU10_r', 0),
@@ -120,10 +122,10 @@ def handle_procesar_expresiones():
                                     au_values.get('AU12_c', 0), au_values.get('AU14_c', 0), au_values.get('AU15_c', 0), au_values.get('AU17_c', 0),
                                     au_values.get('AU20_c', 0), au_values.get('AU23_c', 0), au_values.get('AU25_c', 0), au_values.get('AU26_c', 0),
                                     au_values.get('AU28_c', 0), au_values.get('AU45_c', 0),
-                                    id_estudiante, expression  # Los identificadores para la fila
+                                    id_estudiante, nombre_imagen  # Los identificadores para la fila
                                 )
                             )
-        
+
         conn.commit()
         cur.close()
         conn.close()

@@ -19,3 +19,4 @@ from routes.asignacion_estudiantesRoute import *
 from routes.procesamiento_expresionesRoute import *
 from routes.resultadosRoute import *
 from routes.editar_estudianteRoute import *
+from routes.errorRoute import *

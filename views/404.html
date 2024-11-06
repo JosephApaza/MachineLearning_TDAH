@@ -1,0 +1,21 @@
+<!-- Incluye el encabezado de la página desde el archivo '_header.html' en la carpeta 'partials' -->
+{% include 'partials/_header.html' %}
+
+<!-- Contenedor principal con margen superior -->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3 text-center">
+            <!-- Título grande para el error 404 -->
+            <h1 class="display-4">Error 404 - Página no encontrada</h1>
+
+            <!-- Párrafo de texto lead con mensaje de error -->
+            <p class="lead">Lo sentimos, la página que estás buscando no existe.</p>
+
+            <!-- Enlace de botón para volver a la página de inicio -->
+            <a class="btn btn-primary" href="/">Volver a la página de inicio</a>
+        </div>
+    </div>
+</div>
+
+<!-- Incluye el pie de página desde el archivo '_footer.html' en la carpeta 'partials' -->
+{% include 'partials/_footer.html' %}

@@ -3,51 +3,60 @@
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-      <div class="card">
-        <div class="card-body">
-          <h1 class="card-title mb-4 text-center">Inicio</h1>
-          <div class="row">
-            <div class="col-md-3">
-              <div class="card text-white bg-success mb-3 text-center" style="max-width: 18rem; height: 200px;">
-                <div class="card-header">Captura de imágenes</div>
-                <div class="card-body text-center">
-                  <h5 class="card-title">Tomar fotos</h5>
-                  <a href="/captura_imagenes" class="btn btn-light">Ir a captura de imágenes</a>
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title mb-4 text-center">Inicio</h1>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card text-white bg-success mb-3 text-center" style="max-width: 18rem; height: 200px;">
+                            <div class="card-header">Captura de imágenes</div>
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Tomar fotos</h5>
+                                <a href="/captura_imagenes" class="btn btn-light">Ir a captura de imágenes</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-info mb-3 text-center" style="max-width: 18rem; height: 200px;">
+                            <div class="card-header">Asignación de estudiantes</div>
+                            <div class="card-body">
+                                <h5 class="card-title">Listado de estudiantes</h5>
+                                <a href="/asignacion_estudiantes" class="btn btn-light">Ir a asignación de estudiantes</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-secondary mb-3 text-center" style="max-width: 18rem; height: 200px;">
+                            <div class="card-header">Procesamiento</div>
+                            <div class="card-body">
+                                <h5 class="card-title">Comenzar el procesamiento de expresiones</h5>
+                                <a href="/procesamiento_expresiones" class="btn btn-light">Ir a procesamiento</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-warning mb-3 text-center" style="max-width: 18rem; height: 200px;">
+                            <div class="card-header">Resultados</div>
+                            <div class="card-body">
+                                <h5 class="card-title">Visualizar resultados</h5>
+                                <a href="/resultados" class="btn btn-light">Ir a resultados</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-primary mb-3 text-center" style="max-width: 18rem; height: 200px;">
+                            <div class="card-header">Predicción de TDAH</div>
+                            <div class="card-body">
+                                <h5 class="card-title">Realizar predicción</h5>
+                                <a href="/prediccion_tdah" class="btn btn-light">Ir a predicción</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-            <div class="col-md-3">
-              <div class="card text-white bg-info mb-3 text-center" style="max-width: 18rem; height: 200px;">
-                <div class="card-header">Asignación de estudiantes</div>
-                <div class="card-body">
-                  <h5 class="card-title">Listado de estudiantes</h5>
-                  <a href="/asignacion_estudiantes" class="btn btn-light">Ir a asignación de estudiantes</a>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="card text-white bg-secondary mb-3 text-center" style="max-width: 18rem; height: 200px;">
-                <div class="card-header">Procesamiento</div>
-                <div class="card-body">
-                  <h5 class="card-title">Comenzar  el procesamiento de expresiones</h5>
-                  <a href="/procesamiento_expresiones" class="btn btn-light">Ir a procesamiento</a>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-white bg-warning mb-3 text-center" style="max-width: 18rem; height: 200px;">
-                  <div class="card-header">Resultados</div>
-                  <div class="card-body">
-                    <h5 class="card-title">Visualizar resultados</h5>
-                    <a href="/resultados" class="btn btn-light">Ir a resultados</a>
-                  </div>
-                </div>
-              </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
+</div>
 
 <!-- Modal para mostrar mensaje -->
 <div class="modal fade" id="modalMensaje" tabindex="-1" aria-labelledby="modalMensajeLabel" aria-hidden="true">

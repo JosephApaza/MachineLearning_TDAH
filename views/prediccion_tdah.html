@@ -1,0 +1,169 @@
+{% include 'partials/_header.html' %}
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Botón de regresar -->
+        <div class="col-12 mb-3">
+            <a href="/" class="btn btn-secondary">&laquo; Volver</a>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Sección de la cámara -->
+        <div class="col-md-6">
+            <div class="border p-3">
+                <h4 class="text-center">Captura de Cámara</h4>
+                <video id="cameraFeed" autoplay playsinline class="img-fluid"></video>
+                <canvas id="canvas" style="display: none;"></canvas>
+            </div>
+        </div>
+
+        <!-- Formulario de información -->
+        <div class="col-md-6">
+            <div class="border p-3">
+                <h4 class="text-center">Información del Estudiante</h4>
+                <form id="studentForm">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" placeholder="Ingrese el nombre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edad" class="form-label">Edad</label>
+                        <input type="number" class="form-control" id="edad" placeholder="Ingrese la edad" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="genero" class="form-label">Género</label>
+                        <select class="form-select" id="genero" required>
+                            <option value="" selected disabled>--Seleccione--</option>
+                            <option value="masculino">Masculino</option>
+                            <option value="femenino">Femenino</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="expresion" class="form-label">Expresión</label>
+                        <select class="form-select" id="expresion" required>
+                            <option value="" selected disabled>--Seleccione--</option>
+                            {% for expresion in expresiones %}
+                            <option value="{{ expresion[1] }}">{{ expresion[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-primary w-100 mb-2" id="tomarFotosBtn">Tomar fotos</button>
+                    <button type="button" class="btn btn-success w-100" id="procesarOpenFaceBtn">Procesar con OpenFace y Predecir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'partials/_footer.html' %}
+
+<script>
+    const video = document.getElementById('cameraFeed');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    let stream;
+
+    // Iniciar la cámara al cargar la página
+    async function startCamera() {
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            video.srcObject = stream;
+        } catch (error) {
+            console.error("Error al acceder a la cámara: ", error);
+        }
+    }
+
+    // Capturar múltiples imágenes
+    async function captureImages() {
+        const numImages = 3;  // Cantidad de imágenes a capturar
+        const interval = 1000; // Intervalo en milisegundos entre capturas
+
+        const nombre = document.getElementById('nombre').value;
+        const edad = document.getElementById('edad').value;
+        const genero = document.getElementById('genero').value;
+        const expresion = document.getElementById('expresion').value;
+
+        if (!nombre || !edad || !genero || !expresion) {
+            alert('Por favor, complete todos los campos.');
+            return;
+        }
+
+        for (let i = 0; i < numImages; i++) {
+            // Capturar la imagen del video
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Convertir la imagen del canvas a base64
+            const imageData = canvas.toDataURL('image/jpeg');
+
+            // Datos del formulario
+            const formData = {
+                nombre: nombre,
+                edad: edad,
+                genero: genero,
+                expresion: expresion,
+                imagen: imageData  // Imagen en base64
+            };
+
+            // Enviar la imagen al backend para guardarla
+            const response = await fetch('/api/predict_capture_images', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                console.log(`Imagen ${i + 1} capturada y enviada correctamente.`);
+            } else {
+                console.log(`Error en la captura de la imagen ${i + 1}: ${result.message}`);
+            }
+
+            // Pausar antes de capturar la siguiente imagen
+            await new Promise(resolve => setTimeout(resolve, interval));
+        }
+
+        alert('Captura de imágenes completada.');
+    }
+
+    // Procesar las imágenes capturadas con OpenFace y realizar predicción
+    async function processAndPredict() {
+        const nombre = document.getElementById('nombre').value;
+        const edad = document.getElementById('edad').value;
+        const genero = document.getElementById('genero').value;
+
+        if (!nombre || !edad || !genero) {
+            alert('Por favor, complete los campos antes de procesar.');
+            return;
+        }
+
+        const response = await fetch('/api/process_openface_and_predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ nombre, edad, genero })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            // Mostrar el resultado de la predicción en un alert
+            alert(`El resultado de la predicción es: ${result.prediccion}`);
+        } else {
+            alert(`Error en el procesamiento o predicción: ${result.message}`);
+        }
+    }
+
+    // Iniciar la cámara al cargar la página
+    window.onload = startCamera;
+
+    // Evento para tomar múltiples fotos al hacer clic en el botón
+    document.getElementById('tomarFotosBtn').addEventListener('click', captureImages);
+
+    // Evento para procesar las imágenes capturadas y realizar la predicción
+    document.getElementById('procesarOpenFaceBtn').addEventListener('click', processAndPredict);
+</script>
